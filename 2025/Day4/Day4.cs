@@ -26,6 +26,34 @@ namespace Advent_of_Code_2024._2025.Day4
             }
             return movable;
         }
+        public int Run2()
+        {
+            HashSet<(int, int)> removed = [];
+            int movable = 0;
+            char[,] data = ReadFile("2025/Day4/test.txt");
+            do
+            {
+                movable = 0;
+                HashSet<(int, int)> tempRemoved = [];
+                for (int i = 0; i < data.GetLength(0); i++)
+                {
+                    for (int j = 0; j < data.GetLength(1); j++)
+                    {
+                        if (data[i, j] == '@')
+                        {
+                            if (CheckForNeigbours2(data, i, j, removed))
+                            {
+                                movable++;
+                                tempRemoved.Add((i, j));
+                            }
+                        }
+                    }
+                }
+                if (tempRemoved.Count == 0) break;
+                removed.UnionWith(tempRemoved);
+            } while (true);
+            return movable;
+        }
 
         public char[,] ReadFile(string path)
         {
@@ -47,15 +75,28 @@ namespace Advent_of_Code_2024._2025.Day4
         private bool CheckForNeigbours(char[,] data, int i, int j)
         {
             List<char> adjecentValues = GetKernel(data, i, j);
-            int count = adjecentValues.Select(c => c =='@').Count();
-            if (count > 4) return false;
+            int count = adjecentValues.Count(c => c == '@');
+            if (count > 3) return false;
+            return true;
+        }
+
+        private bool CheckForNeigbours2(char[,] data, int i, int j, HashSet<(int, int)> removed)
+        {
+            Dictionary<(int, int), char> adjecentValues = GetKernel2(data, i, j);
+            List<(int, int)> removedFromDict = adjecentValues.Keys.Where(k => removed.Contains(k)).ToList();
+            foreach (var key in removedFromDict)
+            {
+                adjecentValues.Remove(key);
+            }
+            int count = adjecentValues.Count(kvp => kvp.Value == '@');
+            if (count > 3) return false;
             return true;
         }
 
         private bool IsInBounds(int length, int heigth, int i, int j)
         {
-            if (i > heigth || i < 0) return false;
-            if (j > length || j < 0) return false;
+            if (i > heigth - 1 || i < 0) return false;
+            if (j > length - 1 || j < 0) return false;
             return true;
         }
 
@@ -92,11 +133,51 @@ namespace Advent_of_Code_2024._2025.Day4
             {
                 list.Add(data[i + 1, j]);
             }
-            if (IsInBounds(dataLength, dataHeight, i - 1, j + 1))
+            if (IsInBounds(dataLength, dataHeight, i + 1, j + 1))
             {
                 list.Add(data[i + 1, j + 1]);
             }
             return list;
+        }
+
+        private Dictionary<(int, int), char> GetKernel2(char[,] data, int i, int j)
+        {
+            int dataLength = data.GetLength(0);
+            int dataHeight = data.GetLength(1);
+            Dictionary < (int, int), char> dict = new();
+            if (IsInBounds(dataLength, dataHeight, i - 1, j - 1))
+            {
+                dict.Add((i-1, j-1), data[i - 1, j - 1]);
+            }
+            if (IsInBounds(dataLength, dataHeight, i - 1, j))
+            {
+                dict.Add((i - 1, j), data[i - 1, j]);
+            }
+            if (IsInBounds(dataLength, dataHeight, i - 1, j + 1))
+            {
+                dict.Add((i - 1, j + 1), data[i - 1, j + 1]);
+            }
+            if (IsInBounds(dataLength, dataHeight, i, j - 1))
+            {
+                dict.Add((i, j - 1), data[i, j - 1]);
+            }
+            if (IsInBounds(dataLength, dataHeight, i, j + 1))
+            {
+                dict.Add((i, j + 1), data[i, j + 1]);
+            }
+            if (IsInBounds(dataLength, dataHeight, i + 1, j - 1))
+            {
+                dict.Add((i + 1, j - 1), data[i + 1, j - 1]);
+            }
+            if (IsInBounds(dataLength, dataHeight, i + 1, j))
+            {
+                dict.Add((i + 1, j), data[i + 1, j]);
+            }
+            if (IsInBounds(dataLength, dataHeight, i + 1, j + 1))
+            {
+                dict.Add((i + 1, j + 1), data[i + 1, j + 1]);
+            }
+            return dict;
         }
     }
 }
