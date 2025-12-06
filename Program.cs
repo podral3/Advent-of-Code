@@ -3,5 +3,5 @@ using AdventOfCode._2025.Day6;
 
 
 Day6 day = new();
-Console.WriteLine(day.Run());
+Console.WriteLine(day.Run2());
 Console.ReadLine();
