@@ -31,18 +31,21 @@ public class Day5
 
     public long Run2()
     {
-        var (ranges, products) = ReadData("2025/Day5/data.txt");
+        var (ranges, products) = ReadData("2025/Day5/test.txt");
 
-        HashSet<long> hashset = new HashSet<long>();
+        List<long> rangesFlatten = [];
+        long total = 0;
         foreach (var range in ranges)
         {
-           for (long i = range.Item1; i <= range.Item2; i++)
-            {
-                hashset.Add(i);
-            }
+           rangesFlatten.Add(range.Item1);
+           rangesFlatten.Add(range.Item2);
         }
-
-        return hashset.Count;
+        rangesFlatten.Sort();
+        for (int i = 0; i < rangesFlatten.Count -1; i++)
+        {
+            total += rangesFlatten[i + 1] - rangesFlatten[i];
+        }
+        return total;
     }
     private (List<(long,long)>, List<long>) ReadData(string path)
     {
