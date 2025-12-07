@@ -30,16 +30,16 @@ namespace Advent_of_Code_2024._2025.Day4
         {
             HashSet<(int, int)> removed = [];
             int movable = 0;
-            char[,] data = ReadFile("2025/Day4/test.txt");
+            char[,] data = ReadFile("2025/Day4/data.txt");
             do
             {
-                movable = 0;
                 HashSet<(int, int)> tempRemoved = [];
                 for (int i = 0; i < data.GetLength(0); i++)
                 {
                     for (int j = 0; j < data.GetLength(1); j++)
                     {
-                        if (data[i, j] == '@')
+                        var x = (i, j);
+                        if (!removed.Contains(x) && data[i, j] == '@')
                         {
                             if (CheckForNeigbours2(data, i, j, removed))
                             {
