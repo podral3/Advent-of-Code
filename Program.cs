@@ -1,7 +1,7 @@
 ﻿using Advent_of_Code_2024._2025.Day2;
-using AdventOfCode._2025.Day9;
+using AdventOfCode._2025.Day11;
 
 
-Day9 day = new();
+Day11 day = new();
 Console.WriteLine(day.Run());
 Console.ReadLine();
