@@ -6,13 +6,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdventOfCode._2025.Day_1
+namespace AdventOfCode._2025.Day1
 {
     public class Day1
     {
         public void Run()
         {
-            List<(char, int)> instructions = ReadFile("C:\\Users\\Podral3\\source\\repos\\Advent of Code 2024\\2025\\Day 1\\test.txt");
+            List<(char, int)> instructions = ReadFile("2025/Day1/test.txt");
             int start = 50;
             int length = 100;
             int part1_counter = 0;
@@ -40,6 +40,39 @@ namespace AdventOfCode._2025.Day_1
                 if (start == 0) part2_counter++;
             }
             Console.WriteLine(part2_counter);
+        }
+
+        public int Run2()
+        {
+            int sum = 0;
+            List<(char, int)> instructions = ReadFile("2025/Day1/data.txt");
+            LinkedList<int> list = [];
+            for(int i = 0; i < 100; i++)
+            {
+                list.AddLast(i);
+            }
+            LinkedListNode<int>? start = list.Find(50);
+            foreach (var instruction in instructions)
+            {
+                if (instruction.Item1 == 'L')
+                {
+                    for(int i = 0; i < instruction.Item2; i++)
+                    {
+                        start = start!.Previous ?? list.Last;
+                        if (start.Value == 0) sum++;
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < instruction.Item2; i++)
+                    {
+                        start = start!.Next ?? list.First;
+                        if (start.Value == 0) sum++;
+                    }
+                }
+            }
+
+            return sum;
         }
 
         private List<(char, int)> ReadFile(string file)
